@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	skepu2::Matrix<unsigned char> inputMatrix = ReadPngFileToMatrix(inputFileName, colorType, imageInfo);
 	skepu2::Matrix<unsigned char> outputMatrix(imageInfo.height, imageInfo.width * imageInfo.elementsPerPixel, 120);
 
-
+/*
 	// Original version
 	{
 		auto conv = skepu2::MapOverlap(average_kernel);
@@ -92,10 +92,11 @@ int main(int argc, char* argv[])
 		});
 	
 		WritePngFileMatrix(outputMatrix, outputFile + "-average.png", colorType, imageInfo);
-		std::cout << "Time for combined: " << (timeTaken.count() / 10E6) << "\n";
+		//std::cout << "Time for combined: " << (timeTaken.count() / 10E6) << "\n";
+		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 
-	
+*/
 	// Separable version
 	{
 		auto conv = skepu2::MapOverlap(average_kernel_1d);
@@ -114,10 +115,11 @@ int main(int argc, char* argv[])
 		});
 		
 		WritePngFileMatrix(outputMatrix, outputFile + "-separable.png", colorType, imageInfo);
-		std::cout << "Time for separable: " << (timeTaken.count() / 10E6) << "\n";
+		//std::cout << "Time for separable: " << (timeTaken.count() / 10E6) << "\n";
+		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 	
-	
+	/*
 	// Separable gaussian
 	{
 		skepu2::Vector<float> stencil = sampleGaussian(radius);
@@ -137,10 +139,11 @@ int main(int argc, char* argv[])
 		});
 	
 		WritePngFileMatrix(outputMatrix, outputFile + "-gaussian.png", colorType, imageInfo);
-		std::cout << "Time for gaussian: " << (timeTaken.count() / 10E6) << "\n";
+		//std::cout << "Time for gaussian: " << (timeTaken.count() / 10E6) << "\n";
+		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 	
-	
+	*/
 	
 	return 0;
 }

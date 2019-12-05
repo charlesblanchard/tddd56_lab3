@@ -2,68 +2,48 @@
 
 make bin/dotproduct
 
-echo
-echo
-echo CPU
-echo
 
-
-for i in `seq 1 10`;
-do	
-	./bin/dotproduct 100 CPU
-done
-
-echo
-echo
-echo OpenMP
-echo
-
-for i in `seq 1 10`;
-do	
-	./bin/dotproduct 100 OpenMP
-done
-
-echo
-echo
-echo OpenCL
-echo
 
 
 echo "CPU"
-for j in `seq 1 9`
+for j in `seq 3 7`
 do
-	for i in `seq 1 10`;
+	let "N = 10 ** $j"
+	echo $N
+	for i in `seq 1 5`;
 	do	
-		let "N = 2 * $j"
+		
 		./bin/dotproduct $N CPU
 	done
+	echo
+	echo
 done
-
-echo
-echo
 
 echo "OpenCL"
-for j in `seq 1 9`
+for j in `seq 3 7`
 do
-	for i in `seq 1 10`;
+	let "N = 10 ** $j"
+	echo $N
+	for i in `seq 1 5`;
 	do	
-		let "N = 2 * $j"
+		
 		./bin/dotproduct $N OpenCL
 	done
+	echo
+	echo
 done
-
-echo
-echo
 
 echo "OpenMP"
-for j in `seq 1 9`
+for j in `seq 3 7`
 do
-	for i in `seq 1 10`;
+	let "N = 10 ** $j"
+	echo $N
+	for i in `seq 1 5`;
 	do	
-		let "N = 10 * $j"
+		
 		./bin/dotproduct $N OpenMP
 	done
+	echo
+	echo
 done
 
-echo
-echo

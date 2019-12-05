@@ -17,7 +17,6 @@
 #include "support.h"
 
 
-
 unsigned char median_kernel(int ox, int oy, size_t stride, const unsigned char *image, size_t elemPerPx)
 {
 	int pixelNum = (2*oy+1)*(2*oy+1);
@@ -29,48 +28,26 @@ unsigned char median_kernel(int ox, int oy, size_t stride, const unsigned char *
     int left, right;
     
     unsigned char array[10000];
-    unsigned char tmp, median;
+    unsigned char temp, median,tmp;
 
-/*
-	unsigned char *array = (unsigned char*) malloc(pixelNum*sizeof(unsigned char));
-    unsigned char tmp, median;
-*/
+
     for (int y = -oy; y <= oy; ++y)
 		for (int x = -ox; x <= ox; x += elemPerPx)
 			array[j++] = image[y*(int)stride+x]; 
 
-    do{
-        median = array[end];
-        left = start - 1;
-        for (right = start; right <= end - 1; right++){
-            if (array[right] <= median){
-                leftNum++;
-                left++;
-                tmp = array[right];
-                array[right] = array[left];
-                array[left] = tmp;
-            }        
-        }
-        left++;
-        tmp = array[right];
-        array[right] = array[left];
-        array[left] = tmp;
+    for(int i=0; i<pixelNum-1; i++)
+        for(int j=i+1; j<pixelNum; j++)
+			if(array[j] < array[i])
+            {
+				temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
 
-        if (leftNum > pixelNum/2){
-            end = left - 1;
-            leftNum = old_leftNum;
-        }
-        else if (leftNum < pixelNum/2){
-            start = left + 1;
-            leftNum++;
-            old_leftNum = leftNum;
-        }     
-        else
-			return median;} 
-
-    }while(1);
-
-    return median;
+    if(pixelNum%2==0)
+        return((array[pixelNum/2] + array[pixelNum/2 - 1]) / 2.0);
+    else
+        return array[pixelNum/2];
 }
 
 

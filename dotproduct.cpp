@@ -63,13 +63,9 @@ int main(int argc, const char* argv[])
 		instancePROD(vres, v1, v2);
 		resSep = instanceSUM(vres);
 	});
-	
-	std::cout << "Time Combined: " << (timeComb.count() / 10E6) << " seconds.\n";
-	std::cout << "Time Separate: " << ( timeSep.count() / 10E6) << " seconds.\n";
-	
-	
-	std::cout << "Result Combined: " << resComb << "\n";
-	std::cout << "Result Separate: " << resSep  << "\n";
+	//time combine
+	//std::cout << (timeComb.count() / 10E6) << "\n";
+	std::cout <<( timeSep.count() / 10E6) << "\n";
 	
 	return 0;
 }
