@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	skepu2::Matrix<unsigned char> inputMatrix = ReadPngFileToMatrix(inputFileName, colorType, imageInfo);
 	skepu2::Matrix<unsigned char> outputMatrix(imageInfo.height, imageInfo.width * imageInfo.elementsPerPixel, 120);
 
-/*
+
 	// Original version
 	{
 		auto conv = skepu2::MapOverlap(average_kernel);
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 
-*/
+
 	// Separable version
 	{
 		auto conv = skepu2::MapOverlap(average_kernel_1d);
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 	
-	/*
+	
 	// Separable gaussian
 	{
 		skepu2::Vector<float> stencil = sampleGaussian(radius);
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 		std::cout << (timeTaken.count() / 10E6) << "\n";
 	}
 	
-	*/
+	
 	
 	return 0;
 }

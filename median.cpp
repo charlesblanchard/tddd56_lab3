@@ -16,79 +16,9 @@
 
 #include "support.h"
 
-
-/* 
-Source:
-https://www.geeksforgeeks.org/iterative-quick-sort/
-*/
-
-// A utility function to swap two elements 
-void swap(unsigned char* a, unsigned char* b) 
-{ 
-    unsigned char t = *a; 
-    *a = *b; 
-    *b = t; 
-} 
-  
-int partition(unsigned char arr[], int l, int h) 
-{ 
-    int x = arr[h]; 
-    int i = (l - 1); 
-  
-    for (int j = l; j <= h - 1; j++) { 
-        if (arr[j] <= x) { 
-            i++; 
-            swap(&arr[i], &arr[j]); 
-        } 
-    } 
-    swap(&arr[i + 1], &arr[h]); 
-    return (i + 1); 
-} 
-  
-/* A[] --> Array to be sorted,  
-l --> Starting index,  
-h --> Ending index */
-void quickSortIterative(unsigned char arr[], int l, int h) 
-{ 
-    // Create an auxiliary stack 
-    int stack[h - l + 1]; 
-  
-    // initialize top of stack 
-    int top = -1; 
-  
-    // push initial values of l and h to stack 
-    stack[++top] = l; 
-    stack[++top] = h; 
-  
-    // Keep popping from stack while is not empty 
-    while (top >= 0) { 
-        // Pop h and l 
-        h = stack[top--]; 
-        l = stack[top--]; 
-  
-        // Set pivot element at its correct position 
-        // in sorted array 
-        int p = partition(arr, l, h); 
-  
-        // If there are elements on left side of pivot, 
-        // then push left side to stack 
-        if (p - 1 > l) { 
-            stack[++top] = l; 
-            stack[++top] = p - 1; 
-        } 
-  
-        // If there are elements on right side of pivot, 
-        // then push right side to stack 
-        if (p + 1 < h) { 
-            stack[++top] = p + 1; 
-            stack[++top] = h; 
-        } 
-    } 
-} 
-
 unsigned char median_kernel(int ox, int oy, size_t stride, const unsigned char *image, size_t elemPerPx)
 {
-	int pixelNum = (2*oy+1)*(2*oy+1);
+	int pixelNum = (2*ox+1)*(2*oy+1);
     int leftNum = 0;
     int old_leftNum = 0; 
     int j = 0;
@@ -98,14 +28,76 @@ unsigned char median_kernel(int ox, int oy, size_t stride, const unsigned char *
     
     unsigned char array[10000];
     unsigned char temp, median,tmp;
-
-
+	
+	unsigned char tmp1, tmp2; 
+	
+	int p;
+	
     for (int y = -oy; y <= oy; ++y)
 		for (int x = -ox; x <= ox; x += elemPerPx)
 			array[j++] = image[y*(int)stride+x]; 
+	
+	
+	// START QUICKSORT
+	
+	// source: https://www.geeksforgeeks.org/iterative-quick-sort/
+	
+	
+		// Create an auxiliary stack 
+		int l=0, h=pixelNum;
+		
+		int stack[10000]; 
+	  
+		// initialize top of stack 
+		int top = -1; 
+	  
+		// push initial values of l and h to stack 
+		stack[++top] = l; 
+		stack[++top] = h; 
+	  
+		// Keep popping from stack while is not empty 
+		while (top >= 0) { 
+			// Pop h and l 
+			h = stack[top--]; 
+			l = stack[top--]; 
+	  
+			// Set pivot element at its correct position 
+			// in sorted array 
 
-	quickSortIterative(array, 0, pixelNum); 
-
+			int x = array[h]; 
+			int i = (l - 1); 
+		  
+			for (int jpart = l; jpart <= h - 1; jpart++) { 
+				if (array[jpart] <= x) { 
+					i++; 
+					tmp1 = array[i]; 
+					array[i] = array[jpart]; 
+					array[jpart] = tmp1; 
+				} 
+			} 
+				
+			tmp2 = array[i + 1]; 
+			array[i + 1] = array[h]; 
+			array[h] = tmp2; 
+			
+			p = (i + 1); 
+			
+			// If there are elements on left side of pivot, 
+			// then push left side to stack 
+			if (p - 1 > l) { 
+				stack[++top] = l; 
+				stack[++top] = p - 1; 
+			} 
+	  
+			// If there are elements on right side of pivot, 
+			// then push right side to stack 
+			if (p + 1 < h) { 
+				stack[++top] = p + 1; 
+				stack[++top] = h; 
+			} 
+		}
+				
+	// END QUICKSORT
 
     if(pixelNum%2==0)
         return((array[pixelNum/2] + array[pixelNum/2 - 1]) / 2.0);
@@ -136,7 +128,7 @@ int main(int argc, char* argv[])
 	std::string outputFileNamePad = outputFileName + ss.str() + "-median.png";
 		
 	// Read the padded image into a matrix. Create the output matrix without padding.
-	ImageInfo imageInfo;
+	ImageInfo imageInfo; 
 	skepu2::Matrix<unsigned char> inputMatrix = ReadAndPadPngFileToMatrix(inputFileName, radius, colorType, imageInfo);
 	skepu2::Matrix<unsigned char> outputMatrix(imageInfo.height, imageInfo.width * imageInfo.elementsPerPixel, 120);
 	
@@ -150,8 +142,6 @@ int main(int argc, char* argv[])
 		calculateMedian(outputMatrix, inputMatrix, imageInfo.elementsPerPixel);
 	});
 	
-	
-
 	WritePngFileMatrix(outputMatrix, outputFileNamePad, colorType, imageInfo);
 	
 	std::cout << "Time: " << (timeTaken.count() / 10E6) << "\n";
